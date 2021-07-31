@@ -9,7 +9,7 @@ export default class Map extends Component {
         super()
         this.state = {
             viewport: {
-                width: '100vw',
+                width: '100%',
                 height: '100vh',
                 latitude: 36.8065,
                 longitude: 10.1815,
@@ -17,7 +17,7 @@ export default class Map extends Component {
             },
             currMarker: null,
             markers: [
-                {latitude: 36.881456,longitude: 10.304526}
+                {latitude: 36.2555,longitude: 10.3425}
             ],
             selectedMarker: null
         }
