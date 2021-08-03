@@ -1,0 +1,19 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+
+api_login_check:
+    path: /api/login_check
+
+gesdinet_jwt_refresh_token:
+    path: /api/token/refresh
+    controller: gesdinet.jwtrefreshtoken::refresh
+users:
+    type      : rest
+    resource  : App\Controller\UserController
+    prefix    : api
+accidents:
+    type      : rest
+    resource  : App\Controller\AccidentController
+    prefix    : api
