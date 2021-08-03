@@ -3,9 +3,10 @@ import './App.css';
 
 import LoginPage from './pages/LoginPage'
 import MapPage from './pages/MapPage'
+
 function App() {
   return (
-      <MapPage />
+        <MapPage />
   );
 }
 

@@ -9,7 +9,12 @@ export default function MapPage() {
         }}>
             <div className="row">
                 <div className="col-lg-4">
-                    <div className="row">
+                    <div className="row"
+                        style={{
+                            marginTop: '10px',
+                            marginBottom:  '10px'
+                        }}
+                    >
                         <center>
                             <button className="btn btn-success" style={{
                                 margin: '5px'
@@ -30,6 +35,14 @@ export default function MapPage() {
                     paddingLeft: '0px',
                     borderLeft: '6px solid #92badd'
                 }} >
+                    <div style={{
+                        height: '70px',
+                        backgroundColor: '#f6f6f6',
+                        borderBottom: '6px solid #92badd',
+                        borderBottomLeftRadius: '35'
+                    }}>
+
+                    </div>
                     <Map />
                 </div>
             </div>
