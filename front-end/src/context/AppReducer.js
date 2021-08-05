@@ -12,5 +12,16 @@ export default (state, action) => {
                 wishlist: state.wishlist.filter((movie) => movie.imdbID !== action.payload)
             }
         }
+        case 'LOGIN_SUCCESS':
+            return {
+                ...state,
+                authenicated: true,
+                role: action.payload
+            }
+        case 'LOGOUT':
+            return {
+                ...state,
+                authenicated: false
+            }
     }
 }

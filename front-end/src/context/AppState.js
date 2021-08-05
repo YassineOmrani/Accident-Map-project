@@ -1,6 +1,7 @@
 import React, { createContext, useReducer} from 'react';
 import AppReducer from './AppReducer'
-
+import jwt_decode from 'jwt-decode';
+import {login as auth} from '../services/authenticationService';
 
 const initialState = {
     authenticated: false,
@@ -13,6 +14,21 @@ export const GlobalContext = createContext(initialState);
 // Provider Component
 export const GlobalProvider = ({children})  => {
     const [state, dispatch] = useReducer(AppReducer, initialState);
+
+    const login = (email, password) => {
+        auth(email, password)
+        .then(res => {
+            const token = res.data.token
+            const decodedToken = jwt_decode(token)
+            console.log(decodedToken)
+            dispatch({
+                type: 'LOGIN_SUCCESS',
+                payload: "USER"
+            })
+
+        })
+        .catch(err => console.log(err))
+    }
 
     const addMarker = (marker) => {
         dispatch({
@@ -43,7 +59,8 @@ export const GlobalProvider = ({children})  => {
                 role: state.role,
                 addMarker,
                 removeMarker,
-                editMarker
+                editMarker,
+                login
             }}
         >
             {
