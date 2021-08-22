@@ -9,12 +9,17 @@ import Axios from "axios"
 const baseUrl = 'localhost:8000'
 
 export async function login(email ,password){
-    const endpoint = `${baseUrl}/api/login`
+    // const endpoint = `${baseUrl}/api/login_check`
+    const endpoint = `http://localhost:8000/api/login_check`
     return await Axios.post(endpoint, {
         username: email,
         password: password
     },{
-        headers: {"Access-Control-Allow-Origin": "*"}
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+        }
     });    
 
 }

@@ -12,34 +12,34 @@ export default function LoginPage() {
     const [password, setPassword] = useState('')
 
     const [emailError, setEmailError] = useState('');
-    const [passwordError, setPasswordError ] = useState('');
-
-    const { login } = useContext(GlobalContext);
+    const [passwordError, setPasswordError] = useState('');
 
 
-    const isFormValid =() => {
-        if (email.length == 0) {
-            setEmailError('le champ email ne peut pas etre vide  !!')
+    const { login, loading } = useContext(GlobalContext);
+
+
+    const isFormValid = () => {
+        if (email.length === 0) {
+            setEmailError('veuillez saisire votre email !!')
         } else {
             setEmailError('')
-        }  
+        }
 
-        if ( password.length == 0 ) {
-            setPasswordError('le champ mot de pass ne peut pas etre vide !!')
+        if (password.length === 0) {
+            setPasswordError('veuillez saisire votre mot de passe !!')
 
         } else {
             setPasswordError('')
         }
         // Condition where form is valid
-        if (emailError == '' && passwordError == '') {
-            handleSubmit()
+        if (emailError === '' && passwordError === '') {
+            login(email, password)
         }
     }
 
     const handleSubmit = (event) => {
+        isFormValid();
         event.preventDefault();
-        console.log(email, password);
-        login(email, password)
     }
 
     return (
@@ -49,60 +49,68 @@ export default function LoginPage() {
                     <img src={userIcon} id="icon" alt="User Icon" />
                 </div>
                 <form onSubmit={handleSubmit} >
-                    <input 
-                        type="text" 
-                        id="login" 
-                        class="fadeIn second" 
-                        name="login" 
+                    <input
+                        type="text"
+                        id="login"
+                        className="fadeIn second"
+                        name="login"
                         placeholder="email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}  
+                        onChange={(e) => setEmail(e.target.value)}
                     />
-                    { emailError && (
-                       <p 
-                       style={{
-                            fontSize: "15px",
-                            color: "red",
-                            textAlign: "center"
-                       }}
-                       >{emailError}</p> 
-                    ) }
-                    <input 
-                        type="text" 
-                        id="password" 
-                        class="fadeIn third" 
-                        name="login" 
+                    {emailError && (
+                        <p
+                            style={{
+                                fontSize: "15px",
+                                color: "red",
+                                textAlign: "center"
+                            }}
+                        >{emailError}</p>
+                    )}
+                    <input
+                        type="password"
+                        id="password"
+                        className="fadeIn third"
+                        name="password"
                         placeholder="password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}    
+                        onChange={(e) => setPassword(e.target.value)}
                     />
-                    { emailError && (
-                       <p
-                        style={{
-                            fontSize: "15px",
-                            color: "red",
-                            textAlign: "center"
-                        }}  
-                       >{emailError}</p> 
-                    ) }
-                    <input 
-                    type="submit" 
-                    class="fadeIn fourth" 
-                    value="se connecter" 
-                    />
+                    {passwordError && (
+                        <p
+                            style={{
+                                fontSize: "15px",
+                                color: "red",
+                                textAlign: "center"
+                            }}
+                        >{passwordError}</p>
+                    )}
+                    {
+                        loading ? (
+                            <p> Chargement... </p>
+                        ) : (
+                            <input
+                                type="submit"
+                                class="fadeIn fourth"
+                                value="se connecter"
+                            />
+                        )
+                    }
+
                 </form>
                 <div id="formFooter">
-                    <img 
-                        src={SalamaIcon} 
-                        alt="User Icon" 
-                        style={{width: '35%', marginRight: "30px", marginLeft: "10px"}}
-                     />
-                    <img 
-                        src={interieurIcon} 
+                    <img
+                        src={SalamaIcon}
+                        alt="User Icon"
+                        style={{ width: '35%', marginRight: "30px", marginLeft: "10px" }}
+
+                    />
+                    <img
+                        src={interieurIcon}
                         alt="User Icon"
                     />
-                    <img 
-                        src={Tunisie} 
+                    <img
+                        src={Tunisie}
                         alt="User Icon"
                         style={{
                             width: '25%',

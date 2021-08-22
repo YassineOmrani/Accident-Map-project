@@ -2,9 +2,16 @@ import React, { Component } from 'react'
 import ReactMapGl, { Marker } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css';
 import pin from "../../assets/img/pin.png";
+import { GlobalContext } from '../../context/AppState';
+import axios from 'axios';
+import {  getAccident } from '../../services/accidentService';
+import transformation from 'transform-coordinates'
 const mapboxToken = 'pk.eyJ1IjoieWFjaW4yMzUiLCJhIjoiY2tyb3E4cWc0MjhwZTJwcHZzYzlvOGRxMyJ9.ECN8fmy4GzywQUx7wdI0Ng'
 
 export default class Map extends Component {
+
+    static contextType  = GlobalContext
+
     constructor() {
         super()
         this.state = {
@@ -16,9 +23,7 @@ export default class Map extends Component {
                 zoom: 9
             },
             currMarker: null,
-            markers: [
-                {latitude: 36.2555,longitude: 10.3425}
-            ],
+            markers: [],
             selectedMarker: null
         }
         this.handleViewportChange = this.handleViewportChange.bind(this)
@@ -28,8 +33,10 @@ export default class Map extends Component {
     }
 
     handleViewportChange(viewport) {
+        const { markers } = this.context 
+        console.log("HandleViewPortChange : "+ markers.length)
         this.setState(prevState => ({
-            viewport: { ...prevState.viewport, ...viewport }
+            viewport: { ...prevState.viewport, ...viewport },
         }))
     }
 
@@ -41,12 +48,11 @@ export default class Map extends Component {
         }))
     }
 
-    handleMarkerClick(marker) {
-        console.log(this.state.selectedMarker)
-        this.setState({
-            selectedMarker: marker
-        })
-        
+    handleMarkerClick(marker, idx) {
+        const { setSelectedMarker, selectedMarker } = this.context
+        setSelectedMarker(this.state.markers[idx]);
+        this.setState(selectedMarker)
+       
     }
 
     handleClose = () => {
@@ -55,8 +61,25 @@ export default class Map extends Component {
         })
     }
 
+    componentDidMount() {
+        const {markers} = this.context
+        this.setState({
+            markers: markers
+        })
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { markers } = this.context;
+        if (markers.length !== this.state.markers.length) {
+            this.setState({
+                markers: markers
+            })
+        }
+    }
+
+
     render() {
-        const { viewport, markers, selectedMarker } = this.state
+        const {  markers } = this.state
         return (
             <ReactMapGl
                 {...this.state.viewport}
@@ -64,18 +87,21 @@ export default class Map extends Component {
                 mapboxApiAccessToken={mapboxToken}
                 mapStyle="mapbox://styles/mapbox/streets-v10"
             >
-                {markers.map((marker, idx) => {
-                    return (
-                        <Marker
-                            key={idx}
-                            latitude={marker.latitude}
-                            longitude={marker.longitude}
-                            onClick={() => this.handleMarkerClick(marker)}
-                        >
-                            <img src={pin} alt="marker" style={{height: '15px',width:'15px'}} />
-                        </Marker>
+                {
+                    markers.length != 0 && (
+                        markers.map((marker, idx) => {
+                            return (
+                                <Marker
+                                    key={idx}
+                                    latitude={parseFloat(marker.latitude)}
+                                    longitude={parseFloat(marker.longitude)}
+                                    onClick={() => this.handleMarkerClick(marker, idx)}
+                                >
+                                    <img src={pin} alt="marker" style={{height: '15px',width:'15px'}} />
+                                </Marker>
+                            )
+                        })
                     )
-                })
                 }
             </ReactMapGl>
         )
