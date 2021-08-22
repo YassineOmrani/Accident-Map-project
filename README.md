@@ -1,5 +1,5 @@
 
-![GitHub Logo](/images/logo.png)
+![GitHub Logo](https://raw.githubusercontent.com/YassineOmrani/Accident-Map-project/main/img/Capture.PNG)
 # Accident-Project-Map
 
 
