@@ -149,7 +149,7 @@ export default function MapPage() {
                                         type="text"
                                         value={governorat}
                                         onChange={(e) => setGovernorat(e.target.value)}
-                                        placeholder={'Governorat'}
+                                        placeholder={'gouvernorat'}
                                     />
                                     <input
                                         style={customStyles.input}
