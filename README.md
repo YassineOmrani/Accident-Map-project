@@ -17,3 +17,7 @@ you need to install :
 - [x] php bin/console doctrine:schema:update --force -> metre à jour la base avec les tables necessaires
 - [x] php bin/console debug:router -> lister les url des api
 - [x] php bin/console server:run -> run the server
+# Case CORS ERROR :
+  * press and hold winodws button + R
+  * paste "chrome.exe --user-data-dir="C:/Chrome dev session" --disable-web-security" and hit enter
+  * Navigate to "localhost:3000"
