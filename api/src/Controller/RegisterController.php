@@ -53,6 +53,7 @@ class RegisterController extends AbstractFOSRestController
     {
         $email = $request->get('email');
         $type = $request->get('type');
+        $roles = $request->get('roles');
        // $password = $request->get('password');
         $password=$this->getPass(6);
         $user = $this->userRepository->findOneBy([
@@ -70,6 +71,7 @@ class RegisterController extends AbstractFOSRestController
         $user->setPassword(
             $this->passwordEncoder->encodePassword($user, $password)
         );
+        $user->setRoles($roles);
        /* $email = (new Email())
         ->from('aymounkefi1919@gmail.com')
         ->to($email)

@@ -80,13 +80,12 @@ class AccidentController extends AbstractFOSRestController
             $route = $paramFetcher->get('route');
             $nbrVictime = $paramFetcher->get('nbrVictime');
             $nbrTuee = $paramFetcher->get('nbrTuee');
-            $nbrBlesse = $paramFetcher->get('nbrBlesse');
+            $nbrBlesse = $paramFetcher->get('nbrBlesse'); //this
             $causeAccident = $paramFetcher->get('causeAccident');
             $typeAccident = $paramFetcher->get('typeAccident');
             $photoPath = $paramFetcher->get('photoPath');
              
-            if($date&&$governorat&&$delegation &&$latitude&&$longitude&&$pointKilometrique
-                &&$nbrVictime&&$nbrTuee&&$nbrBlesse&&$causeAccident&&$typeAccident&& $route ){
+            if( $date&&$governorat&&$delegation&&$latitude&&$longitude&&$pointKilometrique&&$route ){
                 $accident = new Accident();
                 $accident->setDate(new DateTime($date));
                 $accident->setGovernorat($governorat);
@@ -101,11 +100,13 @@ class AccidentController extends AbstractFOSRestController
                 $accident->setCauseAccident($causeAccident);
                 $accident->setTypeAccident($typeAccident);
                 if($photoPath){
+                    $this->entityManager->persist($accident);
+                    $this->entityManager->flush();
                   $accident=  $this->uploadPhoto( $request,  $photoPath, $accident);
                 }
                 $this->entityManager->persist($accident);
                 $this->entityManager->flush();
-                return $this->view(['message' => 'mriguel'], Response::HTTP_OK);
+                return $this->view($accident, Response::HTTP_OK);
             }
         return $this->view(['message' => 'Something went wrong'], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
@@ -131,6 +132,7 @@ class AccidentController extends AbstractFOSRestController
     public function putAccidentAction(ParamFetcher $paramFetcher,Request $request, Accident $accident)
     {
         if($accident){
+
             $date = $paramFetcher->get('date');
             $governorat = $paramFetcher->get('governorat');
             $delegation = $paramFetcher->get('delegation');
@@ -144,9 +146,9 @@ class AccidentController extends AbstractFOSRestController
             $causeAccident = $paramFetcher->get('causeAccident');
             $typeAccident = $paramFetcher->get('typeAccident');
             $photoPath = $paramFetcher->get('photoPath'); 
-            if($date&&$governorat&&$delegation &&$latitude&&$longitude&&$pointKilometrique
-                &&$nbrVictime&&$nbrTuee&&$nbrBlesse&&$causeAccident&&$typeAccident&& $route ){
-                $accident->setDate($date);
+
+            if( $date&&$governorat&&$delegation&&$latitude&&$longitude&&$pointKilometrique&&$route ){
+                $accident->setDate(new DateTime($date));
                 $accident->setGovernorat($governorat);
                 $accident->setLatitude($latitude);
                 $accident->setLongitude( $longitude);
@@ -194,7 +196,7 @@ class AccidentController extends AbstractFOSRestController
         $file = ($path);
 
         if ($file) {
-            $filename = $accident->getDate()->format('Y-m-d-H:i:s'). '.' . $file->guessClientExtension();
+            $filename = $accident->getId(). '.' . $file->guessClientExtension();
             $file->move(
                 $this->getUploadsDir(),
                 $filename
@@ -217,5 +219,48 @@ class AccidentController extends AbstractFOSRestController
         return $this->getParameter('uploads_dir');
     }
 
-
+    /**
+     * @Rest\RequestParam(name="date", nullable=true)
+     * @Rest\RequestParam(name="route", nullable=true)
+     * @Rest\RequestParam(name="governorat", nullable=true)
+     * @Rest\RequestParam(name="delegation", nullable=true)
+     * @param ParamFetcher $paramFetcher
+     * @return \FOS\RestBundle\View\View
+     */
+    public function postAccidentsFilteredAction(ParamFetcher $paramFetcher){
+        $date = $paramFetcher->get('date');
+        $dateTime =new DateTime($date);
+        $governorat = $paramFetcher->get('governorat');
+        $delegation = $paramFetcher->get('delegation');
+        $route = $paramFetcher->get('route');
+        $data =$this->accidentRepository->findAll();
+        $filterdAcc =[];
+        foreach($data as $accident){
+           $test = true;
+           if($date!=null){
+            if($accident->getDate()->format("Y-m-d")!=$dateTime->format("Y-m-d")){
+                $test = false;  
+            }
+           }
+           if($governorat!=null){
+            if(strcmp($accident->getGovernorat(),$governorat)!=0){
+                $test = false;  
+            }
+           }
+           if($delegation!=null){
+            if(strcmp($accident->getDelegation(),$delegation)!=0){
+                $test = false;  
+            }
+           }
+           if($route!=null){
+            if(strcmp($accident->getRoute(),$route)!=0){
+                $test = false;  
+            }
+           }
+           if($test){
+            array_push($filterdAcc,$accident);  
+           }
+        }
+        return $this->view($filterdAcc, Response::HTTP_OK);
+    }
 }
