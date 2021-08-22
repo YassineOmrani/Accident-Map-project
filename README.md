@@ -1,5 +1,5 @@
 # Accident-Project-Map
-    ![Project Screenshot](https://raw.githubusercontent.com/YassineOmrani/Accident-Map-project/main/img/Capture.PNG)
+    ![Accident-project-map](https://raw.githubusercontent.com/YassineOmrani/Accident-Map-project/main/img/Capture.PNG)
 
 # Setting up front-end 
 * Open cmd and in "Accident-map-project/front-end/" 
